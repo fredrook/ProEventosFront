@@ -1,0 +1,13 @@
+version: 2
+builders:
+  - frontend:
+      # Esta é a etapa de build do seu projeto
+      command: npm run build
+deployments:
+  - name: web
+    # Substitua o caminho pelo caminho da pasta de build do seu projeto
+    path: ./build
+    # Defina a rota principal da sua aplicação
+    routes:
+      - src: /
+        dest: /index.html
