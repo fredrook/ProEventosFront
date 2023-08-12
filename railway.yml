@@ -6,7 +6,7 @@ builders:
 deployments:
   - name: web
     # Substitua o caminho pelo caminho da pasta de build do seu projeto
-    path: ./build
+    path: ./src
     # Defina a rota principal da sua aplicação
     routes:
       - src: /

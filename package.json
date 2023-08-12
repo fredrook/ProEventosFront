@@ -26,6 +26,7 @@
     "ngx-currency": "^2.5.3",
     "ngx-spinner": "^10.0.1",
     "ngx-toastr": "^13.2.1",
+    "railway": "^2.0.17",
     "rxjs": "^6.6.7",
     "tslib": "^2.6.1",
     "typescript": "^4.2.4",
