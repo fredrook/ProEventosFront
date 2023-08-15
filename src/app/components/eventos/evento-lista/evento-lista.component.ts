@@ -1,5 +1,4 @@
 import { Router } from '@angular/router';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
@@ -32,7 +31,6 @@ export class EventoListaComponent implements OnInit {
       this.termoBuscaChanged
         .pipe(debounceTime(1000))
         .subscribe((filtrarPor) => {
-          this.spinner.show();
           this.eventoService
             .getEventos(
               this.pagination.currentPage,
@@ -45,11 +43,10 @@ export class EventoListaComponent implements OnInit {
                 this.pagination = paginatedResult.pagination;
               },
               (error: any) => {
-                this.spinner.hide();
                 this.toastr.error('Erro ao Carregar os Eventos', 'Erro!');
               }
             )
-            .add(() => this.spinner.hide());
+            .add();
         });
     }
     this.termoBuscaChanged.next(evt.value);
@@ -59,7 +56,6 @@ export class EventoListaComponent implements OnInit {
     private eventoService: EventoService,
     private modalService: BsModalService,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService,
     private router: Router
   ) {}
 
@@ -84,8 +80,6 @@ export class EventoListaComponent implements OnInit {
   }
 
   public carregarEventos(): void {
-    this.spinner.show();
-
     this.eventoService
       .getEventos(this.pagination.currentPage, this.pagination.itemsPerPage)
       .subscribe(
@@ -94,11 +88,10 @@ export class EventoListaComponent implements OnInit {
           this.pagination = paginatedResult.pagination;
         },
         (error: any) => {
-          this.spinner.hide();
           this.toastr.error('Erro ao Carregar os Eventos', 'Erro!');
         }
       )
-      .add(() => this.spinner.hide());
+      .add();
   }
 
   openModal(event: any, template: TemplateRef<any>, eventoId: number): void {
@@ -114,7 +107,6 @@ export class EventoListaComponent implements OnInit {
 
   confirm(): void {
     this.modalRef.hide();
-    this.spinner.show();
 
     this.eventoService
       .deleteEvento(this.eventoId)
@@ -136,7 +128,7 @@ export class EventoListaComponent implements OnInit {
           );
         }
       )
-      .add(() => this.spinner.hide());
+      .add();
   }
 
   decline(): void {

@@ -1,17 +1,21 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { AbstractControlOptions, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  AbstractControlOptions,
+  FormBuilder,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { Router } from '@angular/router';
 import { ValidatorField } from '@app/helpers/ValidatorField';
 import { UserUpdate } from '@app/models/identity/UserUpdate';
 import { AccountService } from '@app/services/account.service';
 import { PalestranteService } from '@app/services/palestrante.service';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-perfil-detalhe',
   templateUrl: './perfil-detalhe.component.html',
-  styleUrls: ['./perfil-detalhe.component.scss']
+  styleUrls: ['./perfil-detalhe.component.scss'],
 })
 export class PerfilDetalheComponent implements OnInit {
   @Output() changeFormValue = new EventEmitter();
@@ -19,13 +23,13 @@ export class PerfilDetalheComponent implements OnInit {
   userUpdate = {} as UserUpdate;
   form!: FormGroup;
 
-  constructor( private fb: FormBuilder,
+  constructor(
+    private fb: FormBuilder,
     public accountService: AccountService,
     public palestranteService: PalestranteService,
     private router: Router,
-    private toaster: ToastrService,
-    private spinner: NgxSpinnerService
-  ) { }
+    private toaster: ToastrService
+  ) {}
 
   ngOnInit() {
     this.validation();
@@ -34,12 +38,12 @@ export class PerfilDetalheComponent implements OnInit {
   }
 
   private verificaForm(): void {
-    this.form.valueChanges
-      .subscribe(() => this.changeFormValue.emit({...this.form.value}))
+    this.form.valueChanges.subscribe(() =>
+      this.changeFormValue.emit({ ...this.form.value })
+    );
   }
 
   private carregarUsuario(): void {
-    this.spinner.show();
     this.accountService
       .getUser()
       .subscribe(
@@ -55,7 +59,7 @@ export class PerfilDetalheComponent implements OnInit {
           this.router.navigate(['/dashboard']);
         }
       )
-      .add(this.spinner.hide());
+      .add();
   }
 
   private validation(): void {
@@ -92,16 +96,18 @@ export class PerfilDetalheComponent implements OnInit {
 
   public atualizarUsuario() {
     this.userUpdate = { ...this.form.value };
-    this.spinner.show();
 
     if (this.f.funcao.value == 'Palestrante') {
       this.palestranteService.post().subscribe(
         () => this.toaster.success('Função palestrante Ativada!', 'Sucesso!'),
         (error) => {
-          this.toaster.error('A função palestrante não pode ser Ativada', 'Error');
+          this.toaster.error(
+            'A função palestrante não pode ser Ativada',
+            'Error'
+          );
           console.error(error);
         }
-      )
+      );
     }
 
     this.accountService
@@ -113,12 +119,11 @@ export class PerfilDetalheComponent implements OnInit {
           console.error(error);
         }
       )
-      .add(() => this.spinner.hide());
+      .add();
   }
 
   public resetForm(event: any): void {
     event.preventDefault();
     this.form.reset();
   }
-
 }

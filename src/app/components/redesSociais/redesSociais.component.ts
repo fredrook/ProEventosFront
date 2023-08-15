@@ -3,7 +3,6 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { RedeSocial } from '@app/models/RedeSocial';
 import { ToastrService } from 'ngx-toastr';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { RedeSocialService } from '@app/services/redeSocial.service';
 
 @Component({
@@ -24,7 +23,6 @@ export class RedesSociaisComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService,
     private redeSocialService: RedeSocialService,
     private modalService: BsModalService
   ) { }
@@ -39,7 +37,7 @@ export class RedesSociaisComponent implements OnInit {
 
     if (this.eventoId !== 0) origem = 'evento';
 
-    this.spinner.show();
+    
 
     this.redeSocialService
       .getRedesSociais(origem, id)
@@ -53,7 +51,7 @@ export class RedesSociaisComponent implements OnInit {
           this.toastr.error('Erro ao tentar carregar Rede Social', 'Erro');
           console.error(error);
         }
-      ).add(() => this.spinner.hide());
+      ).add();
   }
 
   public validation(): void {
@@ -88,7 +86,7 @@ export class RedesSociaisComponent implements OnInit {
     if (this.eventoId !== 0) origem = 'evento';
 
     if (this.formRS.controls.redesSociais.valid) {
-      this.spinner.show();
+      
       this.redeSocialService
         .saveRedesSociais(origem, this.eventoId, this.formRS.value.redesSociais)
         .subscribe(
@@ -100,7 +98,7 @@ export class RedesSociaisComponent implements OnInit {
             console.error(error);
           }
         )
-        .add(() => this.spinner.hide());
+        .add();
     }
   }
 
@@ -115,7 +113,7 @@ export class RedesSociaisComponent implements OnInit {
   confirmDeleteRedeSocial(): void {
     let origem = 'palestrante';
     this.modalRef.hide();
-    this.spinner.show();
+    
 
     if (this.eventoId !== 0) origem = 'evento';
 
@@ -134,7 +132,7 @@ export class RedesSociaisComponent implements OnInit {
           console.error(error);
         }
       )
-      .add(() => this.spinner.hide());
+      .add();
   }
 
   declineDeleteRedeSocial(): void {

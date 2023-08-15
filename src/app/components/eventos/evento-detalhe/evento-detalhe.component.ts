@@ -1,16 +1,17 @@
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Component, OnInit, TemplateRef } from '@angular/core';
-import { AbstractControl,
+import {
+  AbstractControl,
   FormArray,
   FormBuilder,
   FormControl,
   FormGroup,
-  Validators } from '@angular/forms';
+  Validators,
+} from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { BsLocaleService } from 'ngx-bootstrap/datepicker';
 import { ToastrService } from 'ngx-toastr';
-import { NgxSpinnerService } from 'ngx-spinner';
 
 import { LoteService } from './../../../services/lote.service';
 import { EventoService } from '@app/services/evento.service';
@@ -61,7 +62,6 @@ export class EventoDetalheComponent implements OnInit {
     private localeService: BsLocaleService,
     private activatedRouter: ActivatedRoute,
     private eventoService: EventoService,
-    private spinner: NgxSpinnerService,
     private toastr: ToastrService,
     private modalService: BsModalService,
     private router: Router,
@@ -75,8 +75,6 @@ export class EventoDetalheComponent implements OnInit {
     this.eventoId = +this.activatedRouter.snapshot.paramMap.get('id');
 
     if (this.eventoId !== null && this.eventoId !== 0) {
-      this.spinner.show();
-
       this.estadoSalvar = 'put';
 
       this.eventoService
@@ -86,7 +84,10 @@ export class EventoDetalheComponent implements OnInit {
             this.evento = { ...evento };
             this.form.patchValue(this.evento);
             if (this.evento.imagemURL !== '') {
-              this.imagemURL = environment.apiURL + 'resources/images/' + this.evento.imagemURL;
+              this.imagemURL =
+                environment.apiURL +
+                'resources/images/' +
+                this.evento.imagemURL;
             }
             this.carregarLotes();
           },
@@ -95,7 +96,7 @@ export class EventoDetalheComponent implements OnInit {
             console.error(error);
           }
         )
-        .add(() => this.spinner.hide());
+        .add();
     }
   }
 
@@ -113,7 +114,7 @@ export class EventoDetalheComponent implements OnInit {
           console.error(error);
         }
       )
-      .add(() => this.spinner.hide());
+      .add();
   }
 
   ngOnInit(): void {
@@ -173,7 +174,6 @@ export class EventoDetalheComponent implements OnInit {
   }
 
   public salvarEvento(): void {
-    this.spinner.show();
     if (this.form.valid) {
       this.evento =
         this.estadoSalvar === 'post'
@@ -187,17 +187,15 @@ export class EventoDetalheComponent implements OnInit {
         },
         (error: any) => {
           console.error(error);
-          this.spinner.hide();
+
           this.toastr.error('Error ao salvar evento', 'Erro');
-        },
-        () => this.spinner.hide()
+        }
       );
     }
   }
 
   public salvarLotes(): void {
     if (this.form.controls.lotes.valid) {
-      this.spinner.show();
       this.loteService
         .saveLote(this.eventoId, this.form.value.lotes)
         .subscribe(
@@ -209,7 +207,7 @@ export class EventoDetalheComponent implements OnInit {
             console.error(error);
           }
         )
-        .add(() => this.spinner.hide());
+        .add();
     }
   }
 
@@ -223,7 +221,6 @@ export class EventoDetalheComponent implements OnInit {
 
   confirmDeleteLote(): void {
     this.modalRef.hide();
-    this.spinner.show();
 
     this.loteService
       .deleteLote(this.eventoId, this.loteAtual.id)
@@ -240,7 +237,7 @@ export class EventoDetalheComponent implements OnInit {
           console.error(error);
         }
       )
-      .add(() => this.spinner.hide());
+      .add();
   }
 
   declineDeleteLote(): void {
@@ -250,7 +247,7 @@ export class EventoDetalheComponent implements OnInit {
   onFileChange(ev: any): void {
     const reader = new FileReader();
 
-    reader.onload = (event: any) => this.imagemURL = event.target.result;
+    reader.onload = (event: any) => (this.imagemURL = event.target.result);
 
     this.file = ev.target.files;
     reader.readAsDataURL(this.file[0]);
@@ -259,17 +256,18 @@ export class EventoDetalheComponent implements OnInit {
   }
 
   uploadImagem(): void {
-    this.spinner.show();
-    this.eventoService.postUpload(this.eventoId, this.file).subscribe(
-      () => {
-        this.carregarEvento();
-        this.toastr.success('Imagem atualizada com Sucesso', 'Sucesso!');
-      },
-      (error: any) => {
-        this.toastr.error('Erro ao fazer upload de imagem', 'Erro!');
-        console.log(error);
-      }
-    ).add(() => this.spinner.hide());
+    this.eventoService
+      .postUpload(this.eventoId, this.file)
+      .subscribe(
+        () => {
+          this.carregarEvento();
+          this.toastr.success('Imagem atualizada com Sucesso', 'Sucesso!');
+        },
+        (error: any) => {
+          this.toastr.error('Erro ao fazer upload de imagem', 'Erro!');
+          console.log(error);
+        }
+      )
+      .add();
   }
-
 }

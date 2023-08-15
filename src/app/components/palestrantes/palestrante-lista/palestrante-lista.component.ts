@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { PalestranteService } from '@app/services/palestrante.service';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
@@ -24,7 +23,6 @@ export class PalestranteListaComponent implements OnInit {
     private palestranteService: PalestranteService,
     private modalService: BsModalService,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService,
     private router: Router
   ) { }
 
@@ -45,7 +43,7 @@ export class PalestranteListaComponent implements OnInit {
       this.termoBuscaChanged
         .pipe(debounceTime(1000))
         .subscribe((filtrarPor) => {
-          this.spinner.show();
+          
           this.palestranteService
             .getPalestrantes(
               this.pagination.currentPage,
@@ -58,11 +56,11 @@ export class PalestranteListaComponent implements OnInit {
                 this.pagination = paginatedResult.pagination;
               },
               (error: any) => {
-                this.spinner.hide();
+                
                 this.toastr.error('Erro ao Carregar os Palestrantes', 'Erro!');
               }
             )
-            .add(() => this.spinner.hide());
+            .add();
         });
     }
     this.termoBuscaChanged.next(evt.value);
@@ -76,7 +74,7 @@ export class PalestranteListaComponent implements OnInit {
   }
 
   public carregarPalestrantes(): void {
-    this.spinner.show();
+    
 
     this.palestranteService
       .getPalestrantes(this.pagination.currentPage, this.pagination.itemsPerPage)
@@ -86,11 +84,11 @@ export class PalestranteListaComponent implements OnInit {
           this.pagination = paginatedResult.pagination;
         },
         (error: any) => {
-          this.spinner.hide();
+          
           this.toastr.error('Erro ao Carregar os Eventos', 'Erro!');
         }
       )
-      .add(() => this.spinner.hide());
+      .add();
   }
 
 }

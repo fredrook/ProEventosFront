@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { UserUpdate } from '@app/models/identity/UserUpdate';
 import { AccountService } from '@app/services/account.service';
 import { environment } from '@environments/environment';
@@ -20,7 +19,6 @@ export class PerfilComponent implements OnInit {
   }
 
   constructor(
-    private spinner: NgxSpinnerService,
     private toastr: ToastrService,
     private accountService: AccountService
   ) {}
@@ -50,7 +48,7 @@ export class PerfilComponent implements OnInit {
   }
 
   private uploadImagem(): void {
-    this.spinner.show();
+    
     this.accountService
       .postUpload(this.file)
       .subscribe(
@@ -59,7 +57,7 @@ export class PerfilComponent implements OnInit {
           this.toastr.error('Erro ao fazer upload de imagem','Erro!');
           console.error(error);
         }
-      ).add(() => this.spinner.hide());
+      ).add();
   }
 
 

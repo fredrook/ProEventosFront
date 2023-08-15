@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { PalestranteService } from '../../../services/palestrante.service';
 import { ToastrService } from 'ngx-toastr';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { map, debounceTime, take, tap } from 'rxjs/operators';
 import { Palestrante } from '@app/models/Palestrante';
 
@@ -19,14 +18,13 @@ export class PalestranteDetalheComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     public palestranteService: PalestranteService,
-    private toastr: ToastrService,
-    private spinner: NgxSpinnerService
+    private toastr: ToastrService
   ) {}
 
   ngOnInit() {
     this.validation();
     this.verificaForm();
-    this.carregarPalestrante()
+    this.carregarPalestrante();
   }
 
   private validation(): void {
@@ -36,18 +34,14 @@ export class PalestranteDetalheComponent implements OnInit {
   }
 
   private carregarPalestrante(): void {
-    this.spinner.show();
-
-    this.palestranteService
-      .getPalestrante()
-      .subscribe(
-        (palestrante: Palestrante) => {
-          this.form.patchValue(palestrante);
-        },
-        (error: any) => {
-          this.toastr.error('Erro ao Carregar o Palestrante', 'Erro')
-        }
-      )
+    this.palestranteService.getPalestrante().subscribe(
+      (palestrante: Palestrante) => {
+        this.form.patchValue(palestrante);
+      },
+      (error: any) => {
+        this.toastr.error('Erro ao Carregar o Palestrante', 'Erro');
+      }
+    );
   }
 
   public get f(): any {
@@ -62,11 +56,11 @@ export class PalestranteDetalheComponent implements OnInit {
           this.corDaDescricao = 'text-warning';
         }),
         debounceTime(1000),
-        tap(() => this.spinner.show())
+        tap()
       )
       .subscribe(() => {
         this.palestranteService
-          .put({...this.form.value })
+          .put({ ...this.form.value })
           .subscribe(
             () => {
               this.situacaoDoForm = 'Minicurrículo foi ataulizado!';
@@ -81,7 +75,7 @@ export class PalestranteDetalheComponent implements OnInit {
               this.toastr.error('Erro ao tentar atualizar Palestrante', 'Erro');
             }
           )
-          .add(() => this.spinner.hide())
+          .add();
       });
   }
 }

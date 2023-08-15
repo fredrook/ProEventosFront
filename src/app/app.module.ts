@@ -17,7 +17,6 @@ import { ptBrLocale } from 'ngx-bootstrap/locale';
 import { NgxCurrencyModule } from 'ngx-currency';
 
 import { ToastrModule } from 'ngx-toastr';
-import { NgxSpinnerModule } from 'ngx-spinner';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -91,7 +90,6 @@ defineLocale('pt-br', ptBrLocale);
       preventDuplicates: true,
       progressBar: true,
     }),
-    NgxSpinnerModule,
     NgxCurrencyModule,
   ],
   providers: [
