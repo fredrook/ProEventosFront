@@ -1,0 +1,11 @@
+services:
+  web:
+    image: nginx:stable-alpine
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 80:80
+    environment:
+      NODE_ENV: production
+      NODE_OPTIONS: --openssl-legacy-provider
